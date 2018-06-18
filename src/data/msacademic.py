@@ -40,7 +40,7 @@ def getInfo(paperI):
             conn = http.client.HTTPSConnection('api.labs.cognitive.microsoft.com')
             conn.request("GET", "/academic/v1.0/interpret?%s" % params, "{body}", headers)
             response = conn.getresponse()
-            data = response.read()
+            data = response.read().decode('utf-8')
             json_data = json.loads(data)
             conn.close()
             try: 
@@ -80,7 +80,7 @@ def getInfo(paperI):
             conn = http.client.HTTPSConnection('api.labs.cognitive.microsoft.com')
             conn.request("GET", "/academic/v1.0/evaluate?%s" % params, "{body}", headers)
             response = conn.getresponse()
-            data = response.read()
+            data = response.read().decode('utf-8')
             json_data = json.loads(data)
             conn.close()
             try: 
