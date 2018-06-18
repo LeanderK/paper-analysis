@@ -64,6 +64,10 @@ def getInfo(paperI):
     except IndexError:
         print("IndexError")
         return {'entities' : [{'error' : "IndexError", 'json' : json_data}]}
+    except KeyError:
+        print("KeyError")
+        print(json_data)
+        return {'entities' : [{'error' : "IndexError", 'json' : json_data}]}
 
     params = urllib.parse.urlencode({
         # Request parameters
