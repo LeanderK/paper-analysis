@@ -24,7 +24,7 @@ def make_nips():
     logger.info('scraping years')
     years = scraping.nips.getYears()
     yearsf = filter(lambda x: x[-4:] < 2013, years)
-    for year in yearsf
+    for year in yearsf:
         year_numb = year[-4:]
         logger.info('scraping: ' + str(year_numb))
         papers = scraping.nips.getPapers(year)
