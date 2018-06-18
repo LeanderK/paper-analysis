@@ -28,8 +28,8 @@ def make_nips():
         logger.info('scraping: ' + str(year_numb))
         papers = scraping.nips.getPapers(year)
         downloaded = None
-        with Pool(10) as p:
-            downloaded = p.map(download_nips_and_merge, papers)
+        with Pool(5) as p:
+            downloaded = p.map( msacademic.parsePaper, list(zip(papers,list(range(0,len(papers))))))
         logger.info('making final data set from raw nips '+ str(year_numb))
         df = pd.DataFrame(downloaded)
         df.to_csv("data/raw/nips_" + str(year_numb) + ".csv")
@@ -37,11 +37,6 @@ def make_nips():
             
     logger.info('finished downloading dataset')
     return downloaded
-
-def download_nips_and_merge(paper):
-    downloaded = msacademic.parsePaper(paper)
-    merged = {**paper, **downloaded}
-    return merged
 
 
 if __name__ == '__main__':

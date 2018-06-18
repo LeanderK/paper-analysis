@@ -2,8 +2,9 @@ import http.client, urllib.request, urllib.parse, urllib.error, base64
 import os,json
 import time
 
-def parsePaper(paper):
-    result = getInfo(paper)
+def parsePaper(paperI):
+    (paper, i) = paperI
+    result = getInfo(paperI)
     first = None
     try: 
         first = result['entities'][0]
@@ -13,7 +14,9 @@ def parsePaper(paper):
         first = {'error' : "KeyError", 'json' : result}
     return {**paper, **first}
 
-def getInfo(paper):
+def getInfo(paperI):
+    (paper, i) = paperI
+    print("downloading info " + str(i))
     headers = {
         # Request headers
         'Ocp-Apim-Subscription-Key': os.getenv("MSKEY"),
@@ -42,7 +45,8 @@ def getInfo(paper):
             try: 
                 msg = json_data['error']['message']
                 if msg == 'Rate limit is exceeded. Try again later.':
-                    print("rate limited!")
+                    print("rate limited!1")
+                    print(json_data)
                     time.sleep(30) 
                 else:
                     retryRequest1 = False
@@ -81,7 +85,8 @@ def getInfo(paper):
             try: 
                 msg = json_data['error']['message']
                 if msg == 'Rate limit is exceeded. Try again later.':
-                    print("rate limited!")
+                    print("rate limited!2")
+                    print(json_data)
                     time.sleep(30) 
                 else:
                     retryRequest2 = False
@@ -89,6 +94,7 @@ def getInfo(paper):
                     return json_data
             except KeyError:
                 retryRequest2 = False
+                print("finished!")
                 return json_data
         except Exception as e:
             error = "[Errno {0}] {1}".format(e.errno, e.strerror)
