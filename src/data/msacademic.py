@@ -12,6 +12,7 @@ def parsePaper(paperI):
         print("KeyError")
         print(result)
         first = {'error' : "KeyError", 'json' : result}
+    time.sleep(30) 
     return {**paper, **first}
 
 def getInfo(paperI):
