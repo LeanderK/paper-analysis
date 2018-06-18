@@ -3,17 +3,45 @@ import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
+import scraping.nips
+import msacademic
+import pandas as pd
+from multiprocessing import Pool
 
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    logger.info('downloading data')
+    papers = make_nips()
+    
+def make_nips():
+    logger = logging.getLogger(__name__)
+    downloaded = []
+    logger.info('scraping years')
+    years = scraping.nips.getYears()
+    for year in [years[0]]:#years:
+        year_numb = year[-4:]
+        logger.info('scraping: ' + str(year_numb))
+        papers = scraping.nips.getPapers(year)
+        downloaded = None
+        with Pool(10) as p:
+            downloaded = p.map(download_nips_and_merge, papers)
+        logger.info('making final data set from raw nips '+ str(year_numb))
+        df = pd.DataFrame(downloaded)
+        df.to_csv("data/raw/nips_" + str(year_numb) + ".csv")
+            
+            
+    logger.info('finished downloading dataset')
+    return downloaded
+
+def download_nips_and_merge(paper):
+    downloaded = msacademic.parsePaper(paper)
+    merged = {**paper, **downloaded}
+    return merged
 
 
 if __name__ == '__main__':

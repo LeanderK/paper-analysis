@@ -1,0 +1,3 @@
+[submodule "src/data/nips-grab"]
+	path = src/data/nips-grab
+	url = https://github.com/meyerd/nips-grab
