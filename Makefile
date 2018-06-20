@@ -25,6 +25,10 @@ requirements: test_environment
 	pip install -U pip setuptools wheel
 	pip install -r requirements.txt
 
+## Install Jupyter Extensions    
+jupyter_dep:
+	jupyter labextension install @jupyterlab/plotly-extension
+
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
